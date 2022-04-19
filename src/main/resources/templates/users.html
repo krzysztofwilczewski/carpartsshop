@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="content-type" content="text/html" charset="UTF-8">
+    <title>CarParsShop</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div th:replace="adminheader">
+
+    </div>
+    <div>
+        <h1>UŻYTKOWNICY</h1>
+        <a th:href="@{/admin/users/new}">NOWY UŻYTKOWNIK</a>
+    </div>
+    <div th:if="${message != null}" class="alert alert-success text-center">
+        [[${message}]]
+    </div>
+    <div>
+        <table class="table table-responsive table-bordered table-striped table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>IMIĘ</th>
+                <th>NAZWISKO</th>
+                <th>E-MAIL</th>
+                <th>HASŁO</th>
+                <th>STATUS</th>
+                <th>AKTYWNY</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.firstName}"></td>
+                <td th:text="${user.lastName}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.password}"></td>
+                <td th:text="${user.roles}"></td>
+                <td th:text="${user.enabled}"></td>
+                <td>
+                    Edycja &nbsp; Usuń
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>
