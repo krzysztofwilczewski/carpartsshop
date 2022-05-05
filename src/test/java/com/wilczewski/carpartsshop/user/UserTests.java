@@ -13,6 +13,8 @@ import org.springframework.test.annotation.Rollback;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 @DataJpaTest
 @Rollback(false)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -68,6 +70,27 @@ public class UserTests {
         Role seller = new Role(2);
         user.addRole(seller);
         userRepository.save(user);
+    }
+
+    @Test
+    public void testGetUserByEmail(){
+        String email = "user@wp.pl";
+        User user = userRepository.getUserByEmail(email);
+
+        assertThat(user).isNotNull();
+    }
+
+    @Test
+    public void testCountById(){
+        Integer id = 10;
+        Long countById = userRepository.countById(id);
+        assertThat(countById).isNotNull().isGreaterThan(0);
+    }
+
+    @Test
+    public void testDisableUser(){
+        Integer id = 1;
+        userRepository.updateUserEnabledStatus(id, false);
     }
 }
 

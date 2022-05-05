@@ -5,6 +5,8 @@
     <meta http-equiv="content-type" content="text/html" charset="UTF-8">
     <title>CarParsShop</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/fonts/all.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
     <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 </head>
@@ -22,14 +24,14 @@
         [[${message}]]
     </div>
     <div>
-        <table class="table table-responsive table-bordered table-striped table-hover">
-            <thead class="table-dark">
+        <table class="table table-bordered table-striped table-hover table-responsive-xl">
+            <thead class="thead-dark">
             <tr>
                 <th>ID</th>
                 <th>IMIĘ</th>
                 <th>NAZWISKO</th>
                 <th>E-MAIL</th>
-                <th>HASŁO</th>
+                <!-- <th>HASŁO</th> -->
                 <th>STATUS</th>
                 <th>AKTYWNY</th>
                 <th></th>
@@ -41,17 +43,56 @@
                 <td th:text="${user.firstName}"></td>
                 <td th:text="${user.lastName}"></td>
                 <td th:text="${user.email}"></td>
-                <td th:text="${user.password}"></td>
+                <!-- <td th:text="${user.password}"></td> -->
                 <td th:text="${user.roles}"></td>
-                <td th:text="${user.enabled}"></td>
                 <td>
-                    Edycja &nbsp; Usuń
+                    <a th:if="${user.enabled == true}" class="fa-solid fa-user-check fa-2x icon-green" th:href="@{'/admin/users/' + ${user.id} + '/enabled/false'}" title="Aktywny"></a>
+                    <a th:if="${user.enabled == false}" class="fa-solid fa-user-check fa-2x icon-grey" th:href="@{'/admin/users/' + ${user.id} + '/enabled/true'}" title="Nieaktywny"></a>
+                </td>
+                <td>
+                    <a class="fa-solid fa-user-pen fa-2x icon-green" th:href="@{'/admin/users/edit/' + ${user.id}}"
+                       title="Edycja użytkownika"></a>
+                    &nbsp;
+                    <a class="fa-solid fa-user-slash fa-2x icon-red link-delete"
+                       th:href="@{'/admin/users/delete/' + ${user.id}}" th:userId="${user.id}"
+                       title="Usuń użytkownika"></a>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
 
+    <div class="modal fade text-center" id="confirmModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">USUNĄĆ ??!!</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <span id="confirmText"></span>
+                </div>
+                <div class="modal-footer"></div>
+                <a class="btn btn-success" href="" id="yesButton">TAK</a>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">NIE</button>
+            </div>
+        </div>
+
+    </div>
+
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".link-delete").on("click", function (e) {
+            e.preventDefault();
+            link = $(this);
+            //alert($(this).attr("href"));
+            userId = link.attr("userId");
+            $("#yesButton").attr("href", link.attr("href"));
+            $("#confirmText").text("NAPEWNO CHCESZ USUNĄĆ UŻYTKOWNIKA ID " + userId + " ?");
+            $("#confirmModal").modal();
+        });
+    });
+</script>
 </body>
 </html>

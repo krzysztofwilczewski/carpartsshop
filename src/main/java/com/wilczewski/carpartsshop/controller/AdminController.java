@@ -2,12 +2,14 @@ package com.wilczewski.carpartsshop.controller;
 
 import com.wilczewski.carpartsshop.entity.Role;
 import com.wilczewski.carpartsshop.entity.User;
+import com.wilczewski.carpartsshop.exception.UserNotFoundException;
 import com.wilczewski.carpartsshop.service.RoleService;
 import com.wilczewski.carpartsshop.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -28,29 +30,68 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public String listAllUsers(Model model){
+    public String listAllUsers(Model model) {
         List<User> allUsers = userService.listAllUsers();
         model.addAttribute("users", allUsers);
         return "users";
     }
 
     @GetMapping("/users/new")
-    public String newUser(Model model){
+    public String newUser(Model model) {
         List<Role> roles = roleService.allRoles();
         User user = new User();
         user.setEnabled(true);
 
         model.addAttribute("roles", roles);
         model.addAttribute("user", user);
+        model.addAttribute("title", "NOWY UŻYTKOWNIK");
         return "new_user";
     }
 
     @PostMapping("/user/save")
-    public String saveUser(User user, RedirectAttributes redirectAttributes){
+    public String saveUser(User user, RedirectAttributes redirectAttributes) {
         userService.save(user);
         redirectAttributes.addFlashAttribute("message", "Zapisano nowego użytkownika");
         return "redirect:/admin/users";
 
+    }
+
+    @GetMapping("/users/edit/{id}")
+    public String editUser(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes, Model model) {
+        try {
+            User user = userService.get(id);
+            List<Role> roles = roleService.allRoles();
+            model.addAttribute("user", user);
+            model.addAttribute("title", "EDYCJA UŻYTKOWNIKA (ID: " + id + ")");
+            model.addAttribute("roles", roles);
+            return "new_user";
+        } catch (UserNotFoundException exception) {
+            redirectAttributes.addFlashAttribute("message", exception.getMessage());
+            return "redirect:/admin/users";
+        }
+
+    }
+
+    @GetMapping("/users/delete/{id}")
+    public String deleteUser(@PathVariable(name = "id") Integer id, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            userService.delete(id);
+            redirectAttributes.addFlashAttribute("message", "Użytkownik z ID " + id + " został pomyślnie usunięty");
+        } catch (UserNotFoundException exception) {
+            redirectAttributes.addFlashAttribute("message", exception.getMessage());
+
+        }
+        return "redirect:/admin/users";
+    }
+
+    @GetMapping("/users/{id}/enabled/{status}")
+    public String updateEnabledUserStatus(@PathVariable("id") Integer id, @PathVariable("status") boolean enabled, RedirectAttributes redirectAttributes) {
+        userService.updateUserEnabledStatus(id, enabled);
+        String status = enabled ? " aktywny" : " nieaktywny";
+        String message = "Użytkownik o ID " + id + " jest" + status;
+        redirectAttributes.addFlashAttribute("message", message);
+
+        return "redirect:/admin/users";
     }
 
 }
