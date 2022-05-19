@@ -1,17 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta http-equiv="content-type" content="text/html" charset="UTF-8">
-    <title>CarParsShop</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
-    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
-    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-</head>
+<head th:replace="fragments :: pagehead('ADMIN - EDYCJA/NOWY UŻYTKOWNIK')" />
 <body>
 
 <div class="container-fluid">
-    <div th:replace="adminheader">
+    <div th:replace="fragments :: adminheader">
 
     </div>
     <div>

@@ -1,19 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta http-equiv="content-type" content="text/html" charset="UTF-8">
-    <title>CarParsShop</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/fonts/all.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
-    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
-    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-</head>
+<head th:replace="fragments :: pagehead('ADMIN - LISTA UŻYTKOWNIKÓW')" />
 <body>
 
 <div class="container-fluid">
-    <div th:replace="adminheader">
+    <div th:replace="fragments :: adminheader">
 
     </div>
     <div>
@@ -23,17 +15,34 @@
     <div th:if="${message != null}" class="alert alert-success text-center">
         [[${message}]]
     </div>
+
+    <div>
+        <form th:action="@{/admin/users/page/1}" class="form-inline m-3">
+            <input type="hidden" name="sortField" th:value="${sortField}"/>
+            <input type="hidden" name="sortDir" th:value="${sortDir}"/>
+            Szukaj:&nbsp;
+            <input type="search" name="keyword" th:value="${keyword}" class="form-control" required/>
+            &nbsp;&nbsp;
+            <input type="submit" value="Szukaj" class="btn btn-primary"/>
+            &nbsp;&nbsp;
+            <input type="button" value="Wyczyść" class="btn btn-secondary" onclick="clearFilter()"/>
+        </form>
+    </div>
+
     <div>
         <table class="table table-bordered table-striped table-hover table-responsive-xl">
             <thead class="thead-dark">
             <tr>
-                <th>ID</th>
-                <th>IMIĘ</th>
-                <th>NAZWISKO</th>
-                <th>E-MAIL</th>
+                <th th:replace="fragments :: column_users('id', 'ID')"/>
+
+                <th th:replace="fragments :: column_users('firstName', 'IMIĘ')"/>
+
+                <th th:replace="fragments :: column_users('lastName', 'NAZWISKO')"/>
+
+                <th th:replace="fragments :: column_users('email', 'E-MAIL')"/>
                 <!-- <th>HASŁO</th> -->
                 <th>STATUS</th>
-                <th>AKTYWNY</th>
+                <th th:replace="fragments :: column_users('enabled', 'AKTYWNY')"/>
                 <th></th>
             </tr>
             </thead>
@@ -60,6 +69,36 @@
             </tr>
             </tbody>
         </table>
+    </div>
+
+    <div class="text-center m-1" th:if="${total>0}">
+        <span>Użytkownicy od [[${startCount}]] do [[${stopCount}]] z [[${total}]]</span>
+    </div>
+
+    <div class="text-center m-1" th:unless="${total>0}">
+        <span>Brak użytkowników</span>
+    </div>
+
+    <div th:if="${allPages>1}">
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments :: page_link(1, 'Pierwsza')"></a>
+                </li>
+                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments :: page_link(${currentPage - 1}, 'Poprzednia')"></a>
+                </li>
+                <li th:class="${currentPage != i ? 'page-item': 'page-item active'}" th:each="i : ${#numbers.sequence(1,allPages)}">
+                    <a th:replace="fragments :: page_link(${i}, ${i})"></a>
+                </li>
+                <li th:class="${currentPage < allPages ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments :: page_link(${currentPage + 1}, 'Następna')"></a>
+                </li>
+                <li th:class="${currentPage < allPages ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments :: page_link(${allPages}, 'Ostatnia')"></a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
     <div class="modal fade text-center" id="confirmModal">
@@ -93,6 +132,10 @@
             $("#confirmModal").modal();
         });
     });
+
+    function clearFilter() {
+        window.location = "[[@{/admin/users}]]";
+    }
 </script>
 </body>
 </html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:fragment="pagehead(title)">
+    <meta http-equiv="content-type" content="text/html" charset="UTF-8">
+    <title>[[${title}]]</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/fonts/all.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/js.js}"></script>
+</head>>
+<body>
+
+<th th:fragment="column_users(fieldName, columnLabel)">
+    <a class="text-white"
+       th:href="@{'/admin/users/page/' + ${currentPage} + '?sortField=' +${fieldName}+ '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSort} + ${keyword !=null ? '&keyword=' + keyword : '' }}">
+        [[${columnLabel}]]
+    </a>
+    <span th:if="${sortField == fieldName}"
+          th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+</th>
+
+<a th:fragment="page_link(pageNum, label)"
+   class="page-link"
+   th:href="@{'/admin/users/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">[[${label}]]</a>
+
+
+<div th:fragment="adminheader">
+    <div>
+        <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
+            <input type="submit"/>
+        </form>
+        <nav class="navbar navbar-expand bg-dark">
+            <div class="collapse navbar-collapse">
+                <a href="/">WILQ</a>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/users}">UŻYTKOWNICY</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/products}">PRODUKTY</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/orders}">ZAMÓWIENIA</a>
+                    </li>
+                    <li>
+                        <span class="fas fa-user fa-2x icon-grey"></span>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown"
+                           th:href="@{/account}"
+                           sec:authentication="principal.fullname"></a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" id="logoutLink" href="">Wyloguj</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+</div>
+
+<div th:fragment="header">
+    <div>
+        <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
+            <input type="submit"/>
+        </form>
+        <nav class="navbar navbar-expand bg-dark">
+            <div class="collapse navbar-collapse">
+                <a href="/">WILQ</a>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/products}">PRODUKTY</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/cart}">KOSZYK</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAuthority('Admin')">
+                        <a class="nav-link" th:href="@{/admin}">ADMIN</a>
+                    </li>
+                    <li>
+                        <span class="fas fa-user fa-2x icon-grey"></span>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown"
+                           th:href="@{/account}"
+                           sec:authentication="principal.fullname"></a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" id="logoutLink" href="">Wyloguj</a>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+
+
+<script th:src="@{/js/js.js}"></script>
+</body>
+</html>
