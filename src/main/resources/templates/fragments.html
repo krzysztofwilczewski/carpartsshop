@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-    xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head th:fragment="pagehead(title)">
     <meta http-equiv="content-type" content="text/html" charset="UTF-8">
     <title>[[${title}]]</title>
@@ -10,21 +10,21 @@
     <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/js.js}"></script>
-</head>>
+</head>
 <body>
 
-<th th:fragment="column_users(fieldName, columnLabel)">
+<th th:fragment="column_table(moduleURL, fieldName, columnLabel)">
     <a class="text-white"
-       th:href="@{'/admin/users/page/' + ${currentPage} + '?sortField=' +${fieldName}+ '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSort} + ${keyword !=null ? '&keyword=' + keyword : '' }}">
+       th:href="@{'/admin' + ${moduleURL} + '/page/' + ${currentPage} + '?sortField=' +${fieldName}+ '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSort} + ${keyword !=null ? '&keyword=' + keyword : '' }}">
         [[${columnLabel}]]
     </a>
     <span th:if="${sortField == fieldName}"
           th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
 </th>
 
-<a th:fragment="page_link(pageNum, label)"
+<a th:fragment="page_link(moduleURL, pageNum, label)"
    class="page-link"
-   th:href="@{'/admin/users/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">[[${label}]]</a>
+   th:href="@{'/admin' +${moduleURL} + '/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">[[${label}]]</a>
 
 
 <div th:fragment="adminheader">
@@ -41,6 +41,15 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/admin/products}">PRODUKTY</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/categories}">KATEGORIE</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/brands}">PRODUCENCI</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/admin/manufacturers}">AUTA</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/admin/orders}">ZAMÓWIENIA</a>
@@ -99,6 +108,85 @@
     </div>
 </div>
 
+<div th:fragment="modal" class="modal fade text-center" id="modalDialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">UWAGA</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <span id="modalBody"></span>
+            </div>
+            <div class="modal-footer"></div>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">ZAMKNIJ</button>
+        </div>
+    </div>
+</div>
+
+
+<div th:fragment="modal_delete" class="modal fade text-center" id="confirmModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">USUNĄĆ ??!!</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <span id="confirmText"></span>
+            </div>
+            <div class="modal-footer"></div>
+            <a class="btn btn-success" href="" id="yesButton">TAK</a>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">NIE</button>
+        </div>
+    </div>
+
+</div>
+
+<div th:fragment="pagination(moduleURL, entityName)" th:remove="tag">
+    <div class="text-center m-1" th:if="${totalItems>0}">
+        <span>[[${entityName}]] od [[${startCount}]] do [[${stopCount}]] z [[${totalItems}]]</span>
+    </div>
+
+    <div class="text-center m-1" th:unless="${totalItems>0}">
+        <span>Brak [[${entityName}]]</span>
+    </div>
+
+    <div th:if="${totalPages>1}">
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments :: page_link(${moduleURL}, 1, 'Pierwsza')"></a>
+                </li>
+                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments :: page_link(${moduleURL}, ${currentPage - 1}, 'Poprzednia')"></a>
+                </li>
+                <li th:class="${currentPage != i ? 'page-item': 'page-item active'}" th:each="i : ${#numbers.sequence(1,totalPages)}">
+                    <a th:replace="fragments :: page_link(${moduleURL}, ${i}, ${i})"></a>
+                </li>
+                <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments :: page_link(${moduleURL}, ${currentPage + 1}, 'Następna')"></a>
+                </li>
+                <li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="fragments :: page_link(${moduleURL}, ${totalPages}, 'Ostatnia')"></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<div th:fragment="search_module(moduleURL)">
+    <form th:action="@{${moduleURL}}" class="form-inline m-3">
+        <input type="hidden" name="sortField" th:value="${sortField}"/>
+        <input type="hidden" name="sortDir" th:value="${sortDir}"/>
+        Szukaj:&nbsp;
+        <input type="search" name="keyword" th:value="${keyword}" class="form-control" required/>
+        &nbsp;&nbsp;
+        <input type="submit" value="Szukaj" class="btn btn-primary"/>
+        &nbsp;&nbsp;
+        <input type="button" value="Wyczyść" class="btn btn-secondary" onclick="clearFilter()"/>
+    </form>
+</div>
 
 <script th:src="@{/js/js.js}"></script>
 </body>

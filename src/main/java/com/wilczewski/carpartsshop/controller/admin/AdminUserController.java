@@ -1,4 +1,4 @@
-package com.wilczewski.carpartsshop.controller;
+package com.wilczewski.carpartsshop.controller.admin;
 
 import com.wilczewski.carpartsshop.entity.Role;
 import com.wilczewski.carpartsshop.entity.User;
@@ -21,13 +21,13 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
+public class AdminUserController {
 
     private UserService userService;
     private RoleService roleService;
 
     @Autowired
-    public AdminController(UserService userService, RoleService roleService) {
+    public AdminUserController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
@@ -54,10 +54,10 @@ public class AdminController {
         String reverseSort = sortDir.equals("asc") ? "desc" : "asc";
 
         model.addAttribute("currentPage",pageNumber);
-        model.addAttribute("allPages",page.getTotalPages());
+        model.addAttribute("totalPages",page.getTotalPages());
         model.addAttribute("startCount", startCount);
         model.addAttribute("stopCount", stopCount);
-        model.addAttribute("total",page.getTotalElements());
+        model.addAttribute("totalItems",page.getTotalElements());
         model.addAttribute("users", allUsers);
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);

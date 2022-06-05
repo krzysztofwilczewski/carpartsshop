@@ -20,3 +20,4 @@ function customizeMenu(){
         location.href = this.href;
     });
 }
+

@@ -16,33 +16,22 @@
         [[${message}]]
     </div>
 
-    <div>
-        <form th:action="@{/admin/users/page/1}" class="form-inline m-3">
-            <input type="hidden" name="sortField" th:value="${sortField}"/>
-            <input type="hidden" name="sortDir" th:value="${sortDir}"/>
-            Szukaj:&nbsp;
-            <input type="search" name="keyword" th:value="${keyword}" class="form-control" required/>
-            &nbsp;&nbsp;
-            <input type="submit" value="Szukaj" class="btn btn-primary"/>
-            &nbsp;&nbsp;
-            <input type="button" value="Wyczyść" class="btn btn-secondary" onclick="clearFilter()"/>
-        </form>
-    </div>
+    <div th:replace="fragments :: search_module('/admin/users/page/1')" />
 
     <div>
         <table class="table table-bordered table-striped table-hover table-responsive-xl">
             <thead class="thead-dark">
             <tr>
-                <th th:replace="fragments :: column_users('id', 'ID')"/>
+                <th th:replace="fragments :: column_table('/users', 'id', 'ID')"/>
 
-                <th th:replace="fragments :: column_users('firstName', 'IMIĘ')"/>
+                <th th:replace="fragments :: column_table('/users', 'firstName', 'IMIĘ')"/>
 
-                <th th:replace="fragments :: column_users('lastName', 'NAZWISKO')"/>
+                <th th:replace="fragments :: column_table('/users', 'lastName', 'NAZWISKO')"/>
 
-                <th th:replace="fragments :: column_users('email', 'E-MAIL')"/>
+                <th th:replace="fragments :: column_table('/users', 'email', 'E-MAIL')"/>
                 <!-- <th>HASŁO</th> -->
                 <th>STATUS</th>
-                <th th:replace="fragments :: column_users('enabled', 'AKTYWNY')"/>
+                <th th:replace="fragments :: column_table('/users', 'enabled', 'AKTYWNY')"/>
                 <th></th>
             </tr>
             </thead>
@@ -71,53 +60,10 @@
         </table>
     </div>
 
-    <div class="text-center m-1" th:if="${total>0}">
-        <span>Użytkownicy od [[${startCount}]] do [[${stopCount}]] z [[${total}]]</span>
-    </div>
 
-    <div class="text-center m-1" th:unless="${total>0}">
-        <span>Brak użytkowników</span>
-    </div>
+    <div th:replace="fragments :: pagination('/users', 'Użytkownicy')" />
 
-    <div th:if="${allPages>1}">
-        <nav>
-            <ul class="pagination justify-content-center">
-                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="fragments :: page_link(1, 'Pierwsza')"></a>
-                </li>
-                <li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="fragments :: page_link(${currentPage - 1}, 'Poprzednia')"></a>
-                </li>
-                <li th:class="${currentPage != i ? 'page-item': 'page-item active'}" th:each="i : ${#numbers.sequence(1,allPages)}">
-                    <a th:replace="fragments :: page_link(${i}, ${i})"></a>
-                </li>
-                <li th:class="${currentPage < allPages ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="fragments :: page_link(${currentPage + 1}, 'Następna')"></a>
-                </li>
-                <li th:class="${currentPage < allPages ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="fragments :: page_link(${allPages}, 'Ostatnia')"></a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-
-    <div class="modal fade text-center" id="confirmModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">USUNĄĆ ??!!</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <span id="confirmText"></span>
-                </div>
-                <div class="modal-footer"></div>
-                <a class="btn btn-success" href="" id="yesButton">TAK</a>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">NIE</button>
-            </div>
-        </div>
-
-    </div>
+    <div th:replace="fragments :: modal_delete" />
 
 </div>
 <script type="text/javascript">
