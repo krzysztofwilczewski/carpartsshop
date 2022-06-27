@@ -2,6 +2,7 @@ package com.wilczewski.carpartsshop.entity;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 @Entity
@@ -116,5 +117,18 @@ public class User {
                 ", enabled=" + enabled +
                 ", roles=" + roles +
                 '}';
+    }
+
+    public boolean hasRole(String roleName) {
+        Iterator<Role> iterator = roles.iterator();
+
+        while (iterator.hasNext()) {
+            Role role = iterator.next();
+            if (role.getRoleName().equals(roleName)){
+                return true;
+            }
+        }
+
+        return false;
     }
 }

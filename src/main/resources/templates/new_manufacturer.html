@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments :: pagehead('ADMIN - EDYCJA/NOWE AUTO')" />
+<head th:replace="fragments :: pagehead('ADMIN - EDYCJA/NOWE AUTO', 'none')" />
 <body>
 
 <div class="container-fluid">
@@ -9,7 +9,7 @@
 
     </div>
     <div>
-        <h1>KATEGORIE | [[${title}]]</h1>
+        <h1>AUTA | [[${title}]]</h1>
     </div>
     <form th:action="@{/admin/manufacturers/save}" method="post" style="margin: 0 auto; max-width: 600px" th:object="${manufacturer}"
           enctype="multipart/form-data", onsubmit="return checkUnique(this)">

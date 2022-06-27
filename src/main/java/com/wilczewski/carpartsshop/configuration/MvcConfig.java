@@ -15,6 +15,7 @@ public class MvcConfig implements WebMvcConfigurer {
         directory("../category-images", registry);
         directory("../brand-images", registry);
         directory("../manufacturer-images", registry);
+        directory("../product-images", registry);
     }
 
     private void directory(String pathPattern, ResourceHandlerRegistry registry){
