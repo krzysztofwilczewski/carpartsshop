@@ -47,10 +47,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                .antMatchers( "/","/index", "/login").permitAll()
                 .antMatchers("/admin/**").hasAuthority("Admin")
-                .anyRequest().authenticated()
+               // .anyRequest().authenticated()
                 .and().formLogin().loginPage("/login").usernameParameter("email").permitAll()
-                .and().logout().permitAll()
+                .and().logout().logoutSuccessUrl("/index").permitAll()
                 .and().rememberMe().key("AbcDEFghijKLmNoPQrsTuVWxyZ_1234567890");
     }
 

@@ -23,4 +23,10 @@ public interface ProductService {
     public Page<Product> listByPage(int pageNumber, String sortField, String sortDir, String keyword, Integer categoryId);
 
     public void saveProductPrice(Product productInForm);
+
+    public Page<Product> listByCategory(int pageNumber, Integer categoryId);
+
+    public Product getProduct(String alias) throws ProductNotFoundException;
+
+    public Page<Product> search(String keyword, int pageNumber);
 }

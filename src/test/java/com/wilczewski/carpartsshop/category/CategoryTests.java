@@ -93,4 +93,21 @@ public class CategoryTests {
         List<Category> rootCategories = categoryRepository.findRootCategories(Sort.by("name").ascending());
         rootCategories.forEach(category -> System.out.println(category.getName()));
     }
+
+    @Test
+    public void testListEnabledCategories(){
+        List<Category> categories = categoryRepository.findAllEnabled();
+        categories.forEach(category -> {
+            System.out.println(category.getName() + " (" + category.isEnabled() + ") ");
+        });
+    }
+
+    @Test
+    public void testFindCategoryByAlias(){
+        String alias = "filtry";
+        Category category = categoryRepository.findByAliasEnabled(alias);
+
+        assertThat(category).isNotNull();
+
+    }
 }

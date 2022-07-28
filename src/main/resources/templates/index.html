@@ -2,19 +2,30 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
-<head th:replace="fragments :: pagehead('SKLEP', 'none')" />
+<head th:replace="fragments :: pagehead('SKLEP', 'none')"/>
 
 <body>
 
 <div class="container-fluid">
-    <div th:replace="fragments :: header">
+    <div th:replace="fragments :: header"></div>
+    <div th:replace="fragments :: search"></div>
 
-    </div>
     <div>
-        <h1>HELLO SHOP</h1>
-        Witaj
-     <a th:href="@{/account}" sec:authentication="principal.fullname"></a>
-        <span sec:authentication="principal.authorities"></span>
+        <h1>KATEGORIE</h1>
+     <!--   <a th:href="@{/account}" sec:authentication="principal.fullname"></a>
+        <span sec:authentication="principal.authorities"></span> -->
+    </div>
+    <div class="row">
+        <div class="col-sm-2" th:each="cat : ${listCategories}">
+            <div><img th:src="@{${cat.imagePath}}" width="80"/></div>
+            <div>
+                <a th:href="@{'/c/' + ${cat.alias}}">[[${cat.name}]]</a>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments :: footer">
+
     </div>
 
 </div>

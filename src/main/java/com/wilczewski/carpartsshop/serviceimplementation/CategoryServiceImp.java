@@ -164,7 +164,7 @@ public class CategoryServiceImp implements CategoryService {
         try {
             return categoryRepository.findById(id).get();
         }catch (NoSuchElementException ex) {
-            throw new CategoryNotFoundException("Nie można znaleść kategorii o ID " + id);
+            throw new CategoryNotFoundException("Nie można znaleźć kategorii o ID " + id);
         }
     }
 
@@ -227,5 +227,47 @@ public class CategoryServiceImp implements CategoryService {
             throw new CategoryNotFoundException("Nie można znaleźć kategorii o ID " + id);
         }
         categoryRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Category> listNoChildrenCategories() {
+        List<Category> listNoChildrenCategories = new ArrayList<>();
+
+        List<Category> listEnabledCategories = categoryRepository.findAllEnabled();
+
+        listEnabledCategories.forEach(category -> {
+            Set<Category> children = category.getChildren();
+            if (children == null || children.size() == 0) {
+                listNoChildrenCategories.add(category);
+            }
+        });
+
+        return listNoChildrenCategories;
+    }
+
+    @Override
+    public Category getCategory(String alias) throws CategoryNotFoundException {
+        Category category = categoryRepository.findByAliasEnabled(alias);
+        if (category == null) {
+            throw new CategoryNotFoundException("Nie znaleziono kategorii " + alias);
+        }
+        return category;
+    }
+
+    @Override
+    public List<Category> getCategoryParents(Category child) {
+
+        List<Category> listParents = new ArrayList<>();
+
+        Category parent = child.getParent();
+
+        while (parent != null) {
+            listParents.add(0, parent);
+            parent = parent.getParent();
+        }
+
+        listParents.add(child);
+
+        return listParents;
     }
 }
